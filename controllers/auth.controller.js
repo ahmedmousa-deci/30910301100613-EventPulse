@@ -20,7 +20,7 @@ const signup = asyncHandler(async (req, res, next) => {
   });
 
   const token = jwt.sign(
-    { _id: user._id, email: user.email },
+    { _id: user._id, email: user.email, role: user.role },
     config.JWT_SECRET,
     {
       expiresIn: config.JWT_EXPIRES_IN,
@@ -50,7 +50,7 @@ const login = asyncHandler(async (req, res, next) => {
   }
 
   const token = jwt.sign(
-    { _id: user._id, email: user.email },
+    { _id: user._id, email: user.email, role: user.role },
     config.JWT_SECRET,
     {
       expiresIn: config.JWT_EXPIRES_IN,

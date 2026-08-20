@@ -1,14 +1,14 @@
-const mongooose = require("mongoose");
+const mongoose = require("mongoose");
 
-const messageSchema = new mongooose.Schema(
+const messageSchema = new mongoose.Schema(
   {
     event: {
-      type: mongooose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
       required: [true, "Event is required"],
     },
     user: {
-      type: mongooose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User is required"],
     },
@@ -20,4 +20,4 @@ const messageSchema = new mongooose.Schema(
   { timestamps: true },
 );
 
-module.exports = mongooose.model("Message", messageSchema);
+module.exports = mongoose.model("Message", messageSchema);

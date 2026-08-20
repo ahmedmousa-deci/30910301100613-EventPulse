@@ -4,6 +4,8 @@ const connectDB = require("./db/db");
 const mongoSanitize = require("express-mongo-sanitize");
 const errorHandler = require("./middleware/errorHandler");
 const authRoute = require("./routes/auth.route");
+const categoryRoute = require("./routes/category.route");
+const requireAuth = require("./middleware/requireAuth");
 const app = express();
 const port = config.PORT;
 
@@ -22,6 +24,15 @@ app.use((req, res, next) => {
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/categories", requireAuth, categoryRoute);
+app.use("/api/v1/users", requireAuth, require("./routes/user.route"));
+app.use("/api/v1/events", requireAuth, require("./routes/event.route"));
+app.use(
+  "/api/v1/registrations",
+  requireAuth,
+  require("./routes/registration.route"),
+);
+app.use("/api/v1/messages", requireAuth, require("./routes/message.route"));
 
 app.get("/health", (req, res) => {
   res.status(200).send("Server is healthy");
