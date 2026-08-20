@@ -19,9 +19,17 @@ router.post(
   "/",
   requireRole("admin"),
   [
-    body("name").not().isEmpty().withMessage("Name is required"),
-    body("email").isEmail().withMessage("Invalid email"),
-    body("passwordHash").not().isEmpty().withMessage("Password is required"),
+    body("name").not().isEmpty().withMessage("User name is required"),
+    body("email")
+      .not()
+      .isEmpty()
+      .withMessage("User email is required")
+      .isEmail()
+      .withMessage("Invalid email"),
+    body("passwordHash")
+      .not()
+      .isEmpty()
+      .withMessage("User passwordHash is required"),
     body("role").optional().isIn(["user", "admin"]).withMessage("Invalid role"),
   ],
   validator,
@@ -41,7 +49,7 @@ router.patch(
       .optional()
       .not()
       .isEmpty()
-      .withMessage("Password cannot be empty"),
+      .withMessage("User passwordHash cannot be empty"),
     body("role").optional().isIn(["user", "admin"]).withMessage("Invalid role"),
   ],
   validator,
