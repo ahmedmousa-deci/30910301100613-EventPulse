@@ -20,8 +20,9 @@ const errorHandler = (err, req, res, next) => {
   if (err.code === 11000 || err.cause?.code === 11000) {
     statusCode = 400;
     const keyValue = err.keyValue || err.cause?.keyValue;
-    const value = Object.values(keyValue)[0];
-    message = `Duplicate field value: '${value}'. Please use another value!, ${err.message}`;
+    const key = Object.keys(keyValue || {})[0] || "field";
+    const value = keyValue?.[key];
+    message = `Duplicate value for '${key}': '${value}'. Please use another value!${config.NODE_ENV === "development" ? ", " + err.message : ""}`;
   }
 
   res.status(statusCode).json({

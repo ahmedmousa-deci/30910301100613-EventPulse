@@ -3,6 +3,7 @@ const requireRole = require("../middleware/requireRole");
 const {
   body,
   query,
+  param,
   validationResult,
   matchedData,
 } = require("express-validator");
@@ -20,15 +21,30 @@ const router = express.Router();
 router.get(
   "/",
   [
-    query("name")
+    query("search")
       .optional()
       .isString()
-      .withMessage("Category name must be a string"),
+      .withMessage("Category search term must be a string")
+      .notEmpty()
+      .withMessage("Category search term cannot be empty"),
+    query("limit")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Category limit must be a positive integer"),
+    query("page")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Category page must be a positive integer"),
   ],
   validator,
   getAllCategories,
 );
-router.get("/:id", getACategory);
+router.get(
+  "/:id",
+  [param("id").isMongoId().withMessage("Invalid category ID")],
+  validator,
+  getACategory,
+);
 router.post(
   "/",
   requireRole("admin"),
@@ -40,6 +56,7 @@ router.patch(
   "/:id",
   requireRole("admin"),
   [
+    param("id").isMongoId().withMessage("Invalid category ID"),
     body("name")
       .not()
       .isEmpty()
@@ -50,6 +67,12 @@ router.patch(
   validator,
   updateCategory,
 );
-router.delete("/:id", requireRole("admin"), deleteCategory);
+router.delete(
+  "/:id",
+  requireRole("admin"),
+  [param("id").isMongoId().withMessage("Invalid category ID")],
+  validator,
+  deleteCategory,
+);
 
 module.exports = router;
