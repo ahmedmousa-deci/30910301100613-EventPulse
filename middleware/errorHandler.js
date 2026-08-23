@@ -25,13 +25,27 @@ const errorHandler = (err, req, res, next) => {
     message = `Duplicate value for '${key}': '${value}'. Please use another value!${config.NODE_ENV === "development" ? ", " + err.message : ""}`;
   }
 
+  if (err.name === "DocumentNotFoundError") {
+    statusCode = 404;
+    const modelName = err.model || err.query?.model || "Resource";
+
+    console.log(err.query.model);
+
+    const filter = err.query?._conditions || err.filter || {};
+    const filterStr = Object.entries(filter)
+      .map(([key, value]) => `${key === "_id" ? "ID" : key} '${value}'`)
+      .join(", ");
+
+    message = `${modelName} not found${filterStr}.`;
+  }
+
   res.status(statusCode).json({
     status: statusCode,
     message: message,
     data: null,
     ...(config.NODE_ENV === "development" && { stack: err.stack }),
   });
-  console.error(err);
+  console.error(config.NODE_ENV === "development" ? err.stack : "");
 };
 
 module.exports = errorHandler;

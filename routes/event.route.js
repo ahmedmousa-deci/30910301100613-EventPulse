@@ -3,6 +3,7 @@ const requireRole = require("../middleware/requireRole");
 const {
   body,
   query,
+  param,
   validationResult,
   matchedData,
 } = require("express-validator");
@@ -20,10 +21,10 @@ const router = express.Router();
 router.get(
   "/",
   [
-    query("title")
+    query("search")
       .optional()
       .isString()
-      .withMessage("Event title must be a string"),
+      .withMessage("search must be a string"),
     query("startDate")
       .optional()
       .isDate({ format: "YYYY-MM-DD", strictMode: true })
@@ -42,9 +43,19 @@ router.get(
       .notEmpty()
       .withMessage("Event city is must not be empty and must be a string"),
   ],
+  validator,
   getAllEvents,
 );
-router.get("/:id", getAnEvent);
+router.get(
+  "/:id",
+  [
+    param("id")
+      .isMongoId()
+      .withMessage("Event ID must be a valid MongoDB ObjectId"),
+  ],
+  validator,
+  getAnEvent,
+);
 router.post(
   "/",
   requireRole("admin"),
@@ -77,6 +88,9 @@ router.patch(
   "/:id",
   requireRole("admin"),
   [
+    param("id")
+      .isMongoId()
+      .withMessage("Event ID must be a valid MongoDB ObjectId"),
     body("title")
       .optional()
       .not()
@@ -112,6 +126,16 @@ router.patch(
   validator,
   updateEvent,
 );
-router.delete("/:id", requireRole("admin"), deleteEvent);
+router.delete(
+  "/:id",
+  requireRole("admin"),
+  [
+    param("id")
+      .isMongoId()
+      .withMessage("Event ID must be a valid MongoDB ObjectId"),
+  ],
+  validator,
+  deleteEvent,
+);
 
 module.exports = router;

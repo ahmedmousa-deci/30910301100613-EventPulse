@@ -17,12 +17,13 @@ const getAllCategories = asyncHandler(async (req, res, next) => {
     })
       .skip(skipValue)
       .limit(limitValue)
-      .lean();
+      .lean()
+      .orFail();
 
     const totalCategories = await Category.countDocuments();
 
     return res.status(200).json({
-      status: "success",
+      status: 200,
       results: categories.length,
       data: categories,
       total: totalCategories,
@@ -36,24 +37,22 @@ const getAllCategories = asyncHandler(async (req, res, next) => {
 
   const categories = await Category.find({
     name: { $regex: search || "", $options: "i" },
-  }).lean();
+  })
+    .lean()
+    .orFail();
 
   res.status(200).json({
-    status: "success",
+    status: 200,
     results: categories.length,
     data: categories,
   });
 });
 
 const getACategory = asyncHandler(async (req, res, next) => {
-  const category = await Category.findById(req.params.id).lean();
-
-  if (!category) {
-    return next(new AppError(404, "Category ID Not Found or Invalid"));
-  }
+  const category = await Category.findById(req.params.id).lean().orFail();
 
   return res.status(200).json({
-    status: "success",
+    status: 200,
     data: category,
   });
 });
@@ -63,7 +62,7 @@ const createCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.create({ name });
 
   res.status(201).json({
-    status: "success",
+    status: 200,
     data: category,
   });
 });
@@ -74,23 +73,17 @@ const updateCategory = asyncHandler(async (req, res, next) => {
     req.params.id,
     { name },
     { new: true, runValidators: true },
-  ).lean();
-
-  if (!category) {
-    return next(new AppError(404, "Category ID Not Found or Invalid"));
-  }
+  )
+    .lean()
+    .orFail();
 
   res.status(200).json({
-    status: "success",
+    status: 200,
     data: category,
   });
 });
 const deleteCategory = asyncHandler(async (req, res, next) => {
-  const category = await Category.findByIdAndDelete(req.params.id).lean();
-
-  if (!category) {
-    return next(new AppError(404, "Category ID Not Found or Invalid"));
-  }
+  await Category.findByIdAndDelete(req.params.id).lean().orFail();
 
   res.status(204).send();
 });

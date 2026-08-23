@@ -22,6 +22,13 @@ const eventSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: [true, "Event category is required"],
+      validate: {
+        validator: async function (value) {
+          const category = await mongoose.model("Category").findById(value);
+          return !!category; // Returns false if category does not exist
+        },
+        message: "Referenced category does not exist.",
+      },
     },
   },
   { timestamps: true },

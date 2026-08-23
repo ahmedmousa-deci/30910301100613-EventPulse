@@ -1,5 +1,8 @@
 const config = require("./config/config");
 const express = require("express");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 const connectDB = require("./db/db");
 const mongoSanitize = require("express-mongo-sanitize");
 const errorHandler = require("./middleware/errorHandler");
@@ -22,6 +25,22 @@ app.use((req, res, next) => {
   next();
 });
 app.use(mongoSanitize());
+
+if (config.NODE_ENV === "production") {
+  const logDirectory = path.join(__dirname, "logs");
+  if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory);
+  }
+
+  const accessLogStream = fs.createWriteStream(
+    path.join(logDirectory, "access.log"),
+    { flags: "a" },
+  );
+
+  app.use(morgan("combined", { stream: accessLogStream }));
+} else {
+  app.use(morgan("dev"));
+}
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/categories", requireAuth, categoryRoute);
