@@ -1,8 +1,10 @@
 const express = require("express");
+const AppError = require("../utils/appError.util");
 const requireRole = require("../middleware/requireRole");
 const {
   body,
   query,
+  param,
   validationResult,
   matchedData,
 } = require("express-validator");
@@ -12,47 +14,62 @@ const {
   createRegistration,
   deleteRegistration,
   getAnRegistration,
-  updateRegistration,
+  getUserRegistrations,
 } = require("../controllers/registration.controller");
 
 const router = express.Router();
 
-router.get("/", getAllRegistrations);
+router.get("/", requireRole("admin"), getAllRegistrations);
 
-router.get("/:id", getAnRegistration);
+router.get("/my", requireRole("attendee"), getUserRegistrations);
+
+router.get(
+  "/:id",
+  [
+    param("id")
+      .isMongoId()
+      .withMessage("Registration ID must be a valid MongoDB ObjectId"),
+  ],
+  validator,
+  getAnRegistration,
+);
 
 router.post(
   "/",
-  requireRole("admin"),
+  requireRole("attendee", "admin"),
   [
     body("event")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("Registration event is required")
       .isMongoId()
       .withMessage("Invalid event ID"),
     body("user")
-      .not()
-      .isEmpty()
-      .withMessage("Registration user is required")
+      .optional()
       .isMongoId()
-      .withMessage("Invalid user ID"),
+      .withMessage("Invalid user ID")
+      .custom((value, { req }) => {
+        if (req.user?.role !== "admin") {
+          throw new AppError(
+            403,
+            "Only admin can specify a user for registration",
+          );
+        }
+        return true;
+      }),
   ],
   validator,
   createRegistration,
 );
 
-router.patch(
+router.delete(
   "/:id",
-  requireRole("admin"),
   [
-    body("event").optional().isMongoId().withMessage("Invalid event ID"),
-    body("user").optional().isMongoId().withMessage("Invalid user ID"),
+    param("id")
+      .isMongoId()
+      .withMessage("Registration ID must be a valid MongoDB ObjectId"),
   ],
   validator,
-  updateRegistration,
+  deleteRegistration,
 );
-
-router.delete("/:id", deleteRegistration);
 
 module.exports = router;

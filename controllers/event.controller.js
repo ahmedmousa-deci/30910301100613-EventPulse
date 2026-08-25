@@ -7,7 +7,7 @@ const getAllEvents = asyncHandler(async (req, res, next) => {
   const { search, limit, page, city, startDate, endDate, category } = req.query;
 
   const pageValue = Math.max(parseInt(page) || 1, 1);
-  const limitValue = Math.min(parseInt(limit) || 10, 20); // max 20 per page
+  const limitValue = Math.min(parseInt(limit) || 20, 20); // max 20 per page
   const skipValue = (pageValue - 1) * limitValue;
 
   const query = {
