@@ -1,7 +1,7 @@
 {
-  "name": "event_paluse",
+  "name": "30910301100613-eventpulse",
   "version": "1.0.0",
-  "description": "",
+  "description": "EventPulse RESTful API with real-time announcements",
   "main": "server.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node server.js",
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmedmousa-deci/event_pluse.git"
+    "url": "git+https://github.com/ahmedmousa-deci/30910301100613-EventPulse.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/ahmedmousa-deci/event_pluse/issues"
+    "url": "https://github.com/ahmedmousa-deci/30910301100613-EventPulse/issues"
   },
-  "homepage": "https://github.com/ahmedmousa-deci/event_pluse#readme",
+  "homepage": "https://github.com/ahmedmousa-deci/30910301100613-EventPulse#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cross-env": "^10.1.0",

@@ -114,8 +114,8 @@ event_paluse/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/ahmedmousa-deci/event_paluse.git
-cd event_paluse
+git clone https://github.com/ahmedmousa-deci/30910301100613-EventPulse.git
+cd 30910301100613-EventPulse
 
 # 2. Install dependencies
 npm install
