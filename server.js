@@ -171,4 +171,7 @@ if (require.main === module) {
   startServer();
 }
 
-module.exports = { app, io };
+module.exports = app;
+module.exports.app = app;
+module.exports.io = io;
+module.exports.server = server;
