@@ -10,10 +10,6 @@ const {
 
 const router = express.Router();
 
-/**
- * POST /api/announcements
- * Admin-only: broadcast a live announcement for a specific event.
- */
 router.post(
   "/",
   requireAuth,
@@ -30,10 +26,6 @@ router.post(
   createAnnouncement,
 );
 
-/**
- * GET /api/announcements/:eventId
- * Public: fetch announcement history for an event (oldest to newest).
- */
 router.get("/:eventId", getAnnouncementsByEvent);
 
 module.exports = router;

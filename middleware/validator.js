@@ -6,7 +6,6 @@ const validator = (req, res, next) => {
     return next();
   }
 
-  // Return 422 with an array of field-specific error objects
   return res.status(422).json({
     status: 422,
     message: "Validation failed",

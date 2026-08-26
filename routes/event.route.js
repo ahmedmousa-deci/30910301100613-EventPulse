@@ -62,6 +62,20 @@ const router = express.Router();
  *           type: string
  *         description: Filter by category MongoId
  *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [date, registrations]
+ *           default: date
+ *         description: Field to sort by (date, registrations)
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Sort direction (asc or desc)
+ *       - in: query
  *         name: page
  *         schema:
  *           type: integer
@@ -124,6 +138,11 @@ router.get(
       .isString()
       .notEmpty()
       .withMessage("Event city is must not be empty and must be a string"),
+    query("sortBy")
+      .optional()
+      .isString()
+      .withMessage("sortBy must be a string"),
+    query("order").optional().isString().withMessage("order must be a string"),
   ],
   validator,
   getAllEvents,

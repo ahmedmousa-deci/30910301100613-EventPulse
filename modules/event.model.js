@@ -25,7 +25,7 @@ const eventSchema = new mongoose.Schema(
       validate: {
         validator: async function (value) {
           const category = await mongoose.model("Category").findById(value);
-          return !!category; // Returns false if category does not exist
+          return !!category;
         },
         message: "Referenced category does not exist.",
       },

@@ -7,20 +7,17 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || "Internal Server Error";
 
-  // ── Mongoose ValidationError → 400 Bad Request ──────────────────────────
   if (err.name === "ValidationError") {
     statusCode = 400;
     const errors = Object.values(err.errors).map((el) => el.message);
     message = `Invalid input data: ${errors.join(". ")}`;
   }
 
-  // ── Mongoose CastError (invalid ID format) → 400 Bad Request ────────────
   if (err.name === "CastError") {
     statusCode = 400;
     message = `Invalid ${err.path}: ${err.value}.`;
   }
 
-  // ── Duplicate Key Error (code 11000) → 409 Conflict ─────────────────────
   if (err.code === 11000 || err.cause?.code === 11000) {
     statusCode = 409;
     const keyValue = err.keyValue || err.cause?.keyValue;
@@ -29,7 +26,6 @@ const errorHandler = (err, req, res, next) => {
     message = `Duplicate value for '${key}': '${value}'. Please use another value!`;
   }
 
-  // ── DocumentNotFoundError → 404 Not Found ───────────────────────────────
   if (err.name === "DocumentNotFoundError") {
     statusCode = 404;
     const modelName = err.model || err.query?.model || "Resource";
@@ -40,8 +36,6 @@ const errorHandler = (err, req, res, next) => {
     message = `${modelName} not found${filterStr ? ": " + filterStr : ""}.`;
   }
 
-  // ── Custom AppError → use its own statusCode ────────────────────────────
-  // (Already handled above via err.statusCode, but we set status string here)
   const status =
     err instanceof AppError
       ? err.status

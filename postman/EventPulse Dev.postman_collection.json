@@ -1,0 +1,1503 @@
+{
+  "info": {
+    "_postman_id": "e4a7c8b2-5f12-4d33-91ab-8c9f0e1d2345",
+    "name": "EventPulse Dev",
+    "description": "Complete and structured Postman collection for EventPulse RESTful API with parameterized path IDs, queries, real payloads, and response examples.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "User registration and authentication endpoints",
+      "item": [
+        {
+          "name": "Register / Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/auth/signup",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Signup - 201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseURL}}/api/v1/auth/signup",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "signup"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 201,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkODg5OWFmMDBjMTIzNDU2Nzg5MDEiLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6ImF0dGVuZGVlIiwiaWF0IjoxNzQwNDY1MjAwLCJleHAiOjE3NDEwNzAwMDB9.abcdef1234567890\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678901\",\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"role\": \"attendee\",\n    \"createdAt\": \"2026-08-26T10:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Signup - 422 Validation Error",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 422,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    {\n      \"field\": \"email\",\n      \"message\": \"Please fill a valid email address\"\n    },\n    {\n      \"field\": \"password\",\n      \"message\": \"Password must be at least 6 characters long\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.environment.set('token', jsonData.token);",
+                  "        if (jsonData.data && jsonData.data.role === 'admin') {",
+                  "            pm.environment.set('adminAuthToken', jsonData.token);",
+                  "        } else {",
+                  "            pm.environment.set('userAuthToken', jsonData.token);",
+                  "        }",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Login - 200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseURL}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2JkODg5OWFmMDBjMTIzNDU2Nzg5OTkiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQwNDY1MjAwLCJleHAiOjE3NDEwNzAwMDB9.signatureValue123\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678999\",\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"role\": \"admin\",\n    \"createdAt\": \"2026-08-01T08:00:00.000Z\",\n    \"updatedAt\": \"2026-08-01T08:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Login - 401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"message\": \"Invalid email or password\",\n  \"data\": null\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "description": "Events listing, search, filtering, sorting, and CRUD management",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/events?search=tech&city=Cairo&startDate=2026-09-01&endDate=2026-09-30&sortBy=date&order=asc&page=1&limit=10",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "tech",
+                  "description": "Search by title"
+                },
+                {
+                  "key": "city",
+                  "value": "Cairo",
+                  "description": "Filter by city"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-09-01",
+                  "description": "Filter from date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-09-30",
+                  "description": "Filter to date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "category",
+                  "value": "67bd8899af00c123456789aa",
+                  "description": "Category ObjectId filter",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "date",
+                  "description": "Sort field: date or registrations"
+                },
+                {
+                  "key": "order",
+                  "value": "asc",
+                  "description": "Sort direction: asc or desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (max 20)"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get All Events - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"message\": \"Events fetched successfully\",\n  \"results\": 2,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c12345678910\",\n      \"title\": \"Tech Summit 2026\",\n      \"description\": \"Annual technology innovation summit.\",\n      \"city\": \"Cairo\",\n      \"date\": \"2026-09-15T09:00:00.000Z\",\n      \"capacity\": 250,\n      \"category\": {\n        \"_id\": \"67bd8899af00c123456789aa\",\n        \"name\": \"Technology\"\n      },\n      \"createdAt\": \"2026-08-26T11:00:00.000Z\",\n      \"updatedAt\": \"2026-08-26T11:00:00.000Z\"\n    },\n    {\n      \"_id\": \"67bd8899af00c12345678911\",\n      \"title\": \"AI Developers Expo\",\n      \"description\": \"Hands-on machine learning conference.\",\n      \"city\": \"Cairo\",\n      \"date\": \"2026-09-22T10:00:00.000Z\",\n      \"capacity\": 150,\n      \"category\": {\n        \"_id\": \"67bd8899af00c123456789aa\",\n        \"name\": \"Technology\"\n      },\n      \"createdAt\": \"2026-08-26T11:15:00.000Z\",\n      \"updatedAt\": \"2026-08-26T11:15:00.000Z\"\n    }\n  ],\n  \"page\": 1,\n  \"limit\": 10,\n  \"total\": 2,\n  \"totalPages\": 1,\n  \"nextPage\": null,\n  \"prevPage\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/events/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678910",
+                  "description": "MongoDB ObjectId of the event"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Single Event - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"message\": \"Event fetched successfully\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678910\",\n    \"title\": \"Tech Summit 2026\",\n    \"description\": \"Annual technology innovation summit.\",\n    \"city\": \"Cairo\",\n    \"date\": \"2026-09-15T09:00:00.000Z\",\n    \"capacity\": 250,\n    \"category\": {\n      \"_id\": \"67bd8899af00c123456789aa\",\n      \"name\": \"Technology\"\n    },\n    \"createdAt\": \"2026-08-26T11:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T11:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Get Single Event - 404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"message\": \"Event not found\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Event (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Summit 2026\",\n  \"description\": \"Annual technology innovation summit.\",\n  \"city\": \"Cairo\",\n  \"date\": \"2026-09-15\",\n  \"capacity\": 250,\n  \"category\": \"67bd8899af00c123456789aa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/events",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create Event - 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 201,\n  \"message\": \"Event created successfully\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678910\",\n    \"title\": \"Tech Summit 2026\",\n    \"description\": \"Annual technology innovation summit.\",\n    \"city\": \"Cairo\",\n    \"date\": \"2026-09-15T00:00:00.000Z\",\n    \"capacity\": 250,\n    \"category\": {\n      \"_id\": \"67bd8899af00c123456789aa\",\n      \"name\": \"Technology\"\n    },\n    \"createdAt\": \"2026-08-26T11:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T11:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Create Event - 422 Validation Error",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 422,\n  \"message\": \"Validation failed\",\n  \"errors\": [\n    {\n      \"field\": \"title\",\n      \"message\": \"Event title is required\"\n    },\n    {\n      \"field\": \"category\",\n      \"message\": \"Event category must be a valid MongoDB ObjectId\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Event (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tech Summit 2026 - Extended\",\n  \"capacity\": 300\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/events/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678910",
+                  "description": "MongoDB ObjectId of the event to update"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Update Event - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"message\": \"Event updated successfully\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678910\",\n    \"title\": \"Tech Summit 2026 - Extended\",\n    \"description\": \"Annual technology innovation summit.\",\n    \"city\": \"Cairo\",\n    \"date\": \"2026-09-15T00:00:00.000Z\",\n    \"capacity\": 300,\n    \"category\": {\n      \"_id\": \"67bd8899af00c123456789aa\",\n      \"name\": \"Technology\"\n    },\n    \"createdAt\": \"2026-08-26T11:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Event (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/events/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678910",
+                  "description": "MongoDB ObjectId of the event to delete"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Delete Event - 204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": "Category browsing and management",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/categories?search=Tech&page=1&limit=10",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Tech",
+                  "description": "Search by category name"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get All Categories - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"results\": 2,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c123456789aa\",\n      \"name\": \"Technology\"\n    },\n    {\n      \"_id\": \"67bd8899af00c123456789ab\",\n      \"name\": \"Music & Art\"\n    }\n  ],\n  \"total\": 2,\n  \"page\": 1,\n  \"totalPages\": 1,\n  \"limit\": 10,\n  \"nextPage\": null,\n  \"prevPage\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/categories/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c123456789aa",
+                  "description": "MongoDB ObjectId of the category"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Single Category - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"data\": {\n    \"_id\": \"67bd8899af00c123456789aa\",\n    \"name\": \"Technology\",\n    \"createdAt\": \"2026-08-01T00:00:00.000Z\",\n    \"updatedAt\": \"2026-08-01T00:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Business & Startup\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/categories",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create Category - 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"data\": {\n    \"_id\": \"67bd8899af00c123456789ac\",\n    \"name\": \"Business & Startup\",\n    \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Business & Entrepreneurship\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/categories/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c123456789ac",
+                  "description": "MongoDB ObjectId of the category to update"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Update Category - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": 200,\n  \"data\": {\n    \"_id\": \"67bd8899af00c123456789ac\",\n    \"name\": \"Business & Entrepreneurship\",\n    \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T12:05:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/categories/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c123456789ac",
+                  "description": "MongoDB ObjectId of the category to delete"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Delete Category - 204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "description": "Event registrations endpoints for attendees and admins",
+      "item": [
+        {
+          "name": "Get All Registrations (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/registrations",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "registrations"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get All Registrations - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"results\": 1,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c12345678920\",\n      \"event\": {\n        \"_id\": \"67bd8899af00c12345678910\",\n        \"title\": \"Tech Summit 2026\",\n        \"city\": \"Cairo\",\n        \"date\": \"2026-09-15T09:00:00.000Z\",\n        \"capacity\": 250\n      },\n      \"user\": {\n        \"_id\": \"67bd8899af00c12345678901\",\n        \"name\": \"John Doe\",\n        \"email\": \"john.doe@example.com\"\n      },\n      \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n      \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get My Registrations (Attendee)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/registrations/my",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "registrations",
+                "my"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get My Registrations - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"results\": 1,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c12345678920\",\n      \"event\": {\n        \"_id\": \"67bd8899af00c12345678910\",\n        \"title\": \"Tech Summit 2026\",\n        \"city\": \"Cairo\",\n        \"date\": \"2026-09-15T09:00:00.000Z\",\n        \"capacity\": 250\n      },\n      \"user\": {\n        \"_id\": \"67bd8899af00c12345678901\",\n        \"name\": \"John Doe\",\n        \"email\": \"john.doe@example.com\"\n      },\n      \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n      \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Registration",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/registrations/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "registrations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678920",
+                  "description": "MongoDB ObjectId of the registration"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Single Registration - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678920\",\n    \"event\": {\n      \"_id\": \"67bd8899af00c12345678910\",\n      \"title\": \"Tech Summit 2026\",\n      \"city\": \"Cairo\",\n      \"date\": \"2026-09-15T09:00:00.000Z\"\n    },\n    \"user\": {\n      \"_id\": \"67bd8899af00c12345678901\",\n      \"name\": \"John Doe\",\n      \"email\": \"john.doe@example.com\"\n    },\n    \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Register for Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"67bd8899af00c12345678910\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/registrations",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "registrations"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Register - 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678920\",\n    \"event\": \"67bd8899af00c12345678910\",\n    \"user\": \"67bd8899af00c12345678901\",\n    \"createdAt\": \"2026-08-26T12:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T12:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Register - 409 Duplicate Registration",
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"fail\",\n  \"message\": \"Duplicate value for 'event': '67bd8899af00c12345678910'. Please use another value!\",\n  \"data\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancel Registration",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/registrations/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "registrations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678920",
+                  "description": "MongoDB ObjectId of the registration to cancel"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Cancel Registration - 204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Announcements",
+      "description": "Real-time announcement broadcast (admin) and public event announcement history",
+      "item": [
+        {
+          "name": "Broadcast Announcement (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventId\": \"67bd8899af00c12345678910\",\n  \"text\": \"The opening keynote session begins in 15 minutes in Main Hall A!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/announcements",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "announcements"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Broadcast Announcement - 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678930\",\n    \"event\": \"67bd8899af00c12345678910\",\n    \"user\": {\n      \"_id\": \"67bd8899af00c12345678999\",\n      \"name\": \"Admin User\",\n      \"email\": \"admin@example.com\"\n    },\n    \"text\": \"The opening keynote session begins in 15 minutes in Main Hall A!\",\n    \"createdAt\": \"2026-08-26T13:00:00.000Z\",\n    \"updatedAt\": \"2026-08-26T13:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Event Announcement History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/announcements/:eventId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "announcements",
+                ":eventId"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "67bd8899af00c12345678910",
+                  "description": "MongoDB ObjectId of the event"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Announcement History - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c12345678929\",\n      \"event\": \"67bd8899af00c12345678910\",\n      \"user\": {\n        \"_id\": \"67bd8899af00c12345678999\",\n        \"name\": \"Admin User\",\n        \"email\": \"admin@example.com\"\n      },\n      \"text\": \"Welcome to Tech Summit 2026! Registration badge pickup is open.\",\n      \"createdAt\": \"2026-08-26T08:30:00.000Z\",\n      \"updatedAt\": \"2026-08-26T08:30:00.000Z\"\n    },\n    {\n      \"_id\": \"67bd8899af00c12345678930\",\n      \"event\": \"67bd8899af00c12345678910\",\n      \"user\": {\n        \"_id\": \"67bd8899af00c12345678999\",\n        \"name\": \"Admin User\",\n        \"email\": \"admin@example.com\"\n      },\n      \"text\": \"The opening keynote session begins in 15 minutes in Main Hall A!\",\n      \"createdAt\": \"2026-08-26T13:00:00.000Z\",\n      \"updatedAt\": \"2026-08-26T13:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "description": "Direct message management routes (/api/v1/messages)",
+      "item": [
+        {
+          "name": "Get All Messages",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/messages",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get All Messages - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"_id\": \"67bd8899af00c12345678930\",\n      \"event\": \"67bd8899af00c12345678910\",\n      \"user\": {\n        \"_id\": \"67bd8899af00c12345678999\",\n        \"name\": \"Admin User\",\n        \"email\": \"admin@example.com\"\n      },\n      \"text\": \"Welcome everyone to the event!\",\n      \"createdAt\": \"2026-08-26T10:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Single Message",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/messages/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678930",
+                  "description": "MongoDB ObjectId of the message"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Single Message - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678930\",\n    \"event\": \"67bd8899af00c12345678910\",\n    \"user\": {\n      \"_id\": \"67bd8899af00c12345678999\",\n      \"name\": \"Admin User\",\n      \"email\": \"admin@example.com\"\n    },\n    \"text\": \"Welcome everyone to the event!\",\n    \"createdAt\": \"2026-08-26T10:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Message (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Special workshop in Room 102 starting now.\",\n  \"event\": \"67bd8899af00c12345678910\",\n  \"user\": \"67bd8899af00c12345678999\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/messages",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create Message - 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678931\",\n    \"event\": \"67bd8899af00c12345678910\",\n    \"user\": \"67bd8899af00c12345678999\",\n    \"text\": \"Special workshop in Room 102 starting now.\",\n    \"createdAt\": \"2026-08-26T14:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Message (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Special workshop in Room 102 moved to Room 104.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/v1/messages/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678931",
+                  "description": "MongoDB ObjectId of the message to update"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Update Message - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"_id\": \"67bd8899af00c12345678931\",\n    \"event\": \"67bd8899af00c12345678910\",\n    \"user\": \"67bd8899af00c12345678999\",\n    \"text\": \"Special workshop in Room 102 moved to Room 104.\",\n    \"createdAt\": \"2026-08-26T14:00:00.000Z\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Message (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminAuthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/v1/messages/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "messages",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "67bd8899af00c12345678931",
+                  "description": "MongoDB ObjectId of the message to delete"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Delete Message - 204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "description": "Server health verification",
+      "item": [
+        {
+          "name": "Server Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/health",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Health Check - 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"message\": \"Server is healthy\",\n  \"env\": \"development\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

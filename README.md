@@ -1,4 +1,4 @@
-﻿# Event Paluse API
+# Event Paluse API
 
 A production-ready RESTful API for event management with real-time announcements, built with Node.js, Express, MongoDB, and Socket.io.
 
@@ -37,18 +37,18 @@ A production-ready RESTful API for event management with real-time announcements
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Framework | Express.js v5 |
-| Database | MongoDB + Mongoose |
-| Real-Time | Socket.io |
-| Authentication | JSON Web Tokens (JWT) |
-| Password Hashing | bcrypt |
-| Validation | express-validator |
-| API Docs | swagger-jsdoc + swagger-ui-express |
-| Testing | Jest + Supertest |
-| Logging | Morgan |
+| Layer            | Technology                         |
+| ---------------- | ---------------------------------- |
+| Runtime          | Node.js                            |
+| Framework        | Express.js v5                      |
+| Database         | MongoDB + Mongoose                 |
+| Real-Time        | Socket.io                          |
+| Authentication   | JSON Web Tokens (JWT)              |
+| Password Hashing | bcrypt                             |
+| Validation       | express-validator                  |
+| API Docs         | swagger-jsdoc + swagger-ui-express |
+| Testing          | Jest + Supertest                   |
+| Logging          | Morgan                             |
 
 ---
 
@@ -145,12 +145,12 @@ JWT_SECRET=your_super_secret_jwt_key
 JWT_EXPIRES_IN=7d
 ```
 
-| Variable | Description |
-|---|---|
-| `PORT` | Port the server listens on |
-| `NODE_ENV` | `development` or `production` |
-| `MONGO_URL` | MongoDB connection string |
-| `JWT_SECRET` | Secret key for signing JWT tokens |
+| Variable         | Description                             |
+| ---------------- | --------------------------------------- |
+| `PORT`           | Port the server listens on              |
+| `NODE_ENV`       | `development` or `production`           |
+| `MONGO_URL`      | MongoDB connection string               |
+| `JWT_SECRET`     | Secret key for signing JWT tokens       |
 | `JWT_EXPIRES_IN` | Token expiry duration (e.g. `7d`, `1h`) |
 
 ---
@@ -159,52 +159,55 @@ JWT_EXPIRES_IN=7d
 
 ### Auth — `/api/v1/auth`
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/v1/auth/signup` | Public | Register a new user |
-| `POST` | `/api/v1/auth/login` | Public | Login and receive JWT token |
+| Method | Endpoint              | Auth   | Description                 |
+| ------ | --------------------- | ------ | --------------------------- |
+| `POST` | `/api/v1/auth/signup` | Public | Register a new user         |
+| `POST` | `/api/v1/auth/login`  | Public | Login and receive JWT token |
 
 ### Events — `/api/v1/events`
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/v1/events` | Any | List all events (paginated, filterable) |
-| `GET` | `/api/v1/events/:id` | Any | Get a single event |
-| `POST` | `/api/v1/events` | Admin | Create a new event |
-| `PATCH` | `/api/v1/events/:id` | Admin | Update an event |
-| `DELETE` | `/api/v1/events/:id` | Admin | Delete an event |
+| Method   | Endpoint             | Auth  | Description                             |
+| -------- | -------------------- | ----- | --------------------------------------- |
+| `GET`    | `/api/v1/events`     | Any   | List all events (paginated, filterable) |
+| `GET`    | `/api/v1/events/:id` | Any   | Get a single event                      |
+| `POST`   | `/api/v1/events`     | Admin | Create a new event                      |
+| `PATCH`  | `/api/v1/events/:id` | Admin | Update an event                         |
+| `DELETE` | `/api/v1/events/:id` | Admin | Delete an event                         |
 
 **Query Parameters for GET /events:**
+
 - `search` — filter by title
 - `city` — filter by city
 - `startDate` / `endDate` — date range (YYYY-MM-DD)
 - `category` — filter by category ID
+- `sortBy` — sort field (`date`, `registrations` — defaults to `date`)
+- `order` — sort direction (`asc` or `desc` — defaults to `asc`)
 - `page` / `limit` — pagination
 
 ### Categories — `/api/v1/categories`
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/v1/categories` | Any | List all categories |
-| `POST` | `/api/v1/categories` | Admin | Create a category |
-| `PATCH` | `/api/v1/categories/:id` | Admin | Update a category |
-| `DELETE` | `/api/v1/categories/:id` | Admin | Delete a category |
+| Method   | Endpoint                 | Auth  | Description         |
+| -------- | ------------------------ | ----- | ------------------- |
+| `GET`    | `/api/v1/categories`     | Any   | List all categories |
+| `POST`   | `/api/v1/categories`     | Admin | Create a category   |
+| `PATCH`  | `/api/v1/categories/:id` | Admin | Update a category   |
+| `DELETE` | `/api/v1/categories/:id` | Admin | Delete a category   |
 
 ### Registrations — `/api/v1/registrations`
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/v1/registrations` | Admin | List all registrations |
-| `GET` | `/api/v1/registrations/my` | Attendee | My registrations |
-| `POST` | `/api/v1/registrations` | Attendee/Admin | Register for an event |
-| `DELETE` | `/api/v1/registrations/:id` | Any | Cancel a registration |
+| Method   | Endpoint                    | Auth           | Description            |
+| -------- | --------------------------- | -------------- | ---------------------- |
+| `GET`    | `/api/v1/registrations`     | Admin          | List all registrations |
+| `GET`    | `/api/v1/registrations/my`  | Attendee       | My registrations       |
+| `POST`   | `/api/v1/registrations`     | Attendee/Admin | Register for an event  |
+| `DELETE` | `/api/v1/registrations/:id` | Any            | Cancel a registration  |
 
 ### Announcements — `/api/announcements`
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/announcements` | Admin | Send a live announcement |
-| `GET` | `/api/announcements/:eventId` | Public | Get announcement history |
+| Method | Endpoint                      | Auth   | Description              |
+| ------ | ----------------------------- | ------ | ------------------------ |
+| `POST` | `/api/announcements`          | Admin  | Send a live announcement |
+| `GET`  | `/api/announcements/:eventId` | Public | Get announcement history |
 
 ---
 
@@ -228,14 +231,14 @@ Attendee receives "announcement" event instantly
 
 ### Socket Events
 
-| Direction | Event | Payload | Description |
-|---|---|---|---|
-| Client → Server | `join-event` | `"eventId"` (string) | Join an event room |
-| Client → Server | `join_event` | `{ eventId }` (object) | Join a room (legacy) |
-| Client → Server | `leave_event` | `{ eventId }` | Leave an event room |
-| Server → Client | `announcement` | message object | Live announcement broadcast |
-| Server → Client | `joined` | `{ room }` | Confirmation of room join |
-| Server → Client | `join-error` | `{ message }` | Room join error |
+| Direction       | Event          | Payload                | Description                 |
+| --------------- | -------------- | ---------------------- | --------------------------- |
+| Client → Server | `join-event`   | `"eventId"` (string)   | Join an event room          |
+| Client → Server | `join_event`   | `{ eventId }` (object) | Join a room (legacy)        |
+| Client → Server | `leave_event`  | `{ eventId }`          | Leave an event room         |
+| Server → Client | `announcement` | message object         | Live announcement broadcast |
+| Server → Client | `joined`       | `{ room }`             | Confirmation of room join   |
+| Server → Client | `join-error`   | `{ message }`          | Room join error             |
 
 ### Connecting with Authentication
 
@@ -243,7 +246,7 @@ Pass your JWT token when connecting:
 
 ```js
 const socket = io("http://localhost:3000", {
-  auth: { token: "Bearer eyJhbGci..." }
+  auth: { token: "Bearer eyJhbGci..." },
 });
 
 socket.emit("join-event", "64f3a1b2c5d6e7f8a9b0c1d2");
@@ -265,10 +268,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ### Roles
 
-| Role | Permissions |
-|---|---|
-| `attendee` | Read events, categories, registrations; register for events |
-| `admin` | Full access — create/update/delete events, categories, send announcements |
+| Role       | Permissions                                                               |
+| ---------- | ------------------------------------------------------------------------- |
+| `attendee` | Read events, categories, registrations; register for events               |
+| `admin`    | Full access — create/update/delete events, categories, send announcements |
 
 ---
 
@@ -291,14 +294,14 @@ All endpoints validate input before reaching controllers. Invalid requests retur
 
 ### Error Response Matrix
 
-| Error Type | HTTP Status |
-|---|---|
-| Validation (express-validator) | `422 Unprocessable Entity` |
-| Mongoose ValidationError | `400 Bad Request` |
-| Mongoose CastError (bad ID) | `400 Bad Request` |
-| Duplicate Key (code 11000) | `409 Conflict` |
-| Custom AppError | Uses error`s statusCode |
-| Unhandled / Unknown | `500 Internal Server Error` |
+| Error Type                     | HTTP Status                 |
+| ------------------------------ | --------------------------- |
+| Validation (express-validator) | `422 Unprocessable Entity`  |
+| Mongoose ValidationError       | `400 Bad Request`           |
+| Mongoose CastError (bad ID)    | `400 Bad Request`           |
+| Duplicate Key (code 11000)     | `409 Conflict`              |
+| Custom AppError                | Uses error`s statusCode     |
+| Unhandled / Unknown            | `500 Internal Server Error` |
 
 ---
 
@@ -331,11 +334,11 @@ npx jest tests/integration
 
 ### Test Coverage
 
-| Suite | Tests | Description |
-|---|---|---|
-| `AppError.test.js` | 5 | Validates statusCode, status string, isOperational, Error inheritance |
-| `asyncHandler.test.js` | 3 | Verifies req/res/next forwarding and error catching |
-| `events.test.js` | 6 | Auth checks, validation responses, health endpoint |
+| Suite                  | Tests | Description                                                           |
+| ---------------------- | ----- | --------------------------------------------------------------------- |
+| `AppError.test.js`     | 5     | Validates statusCode, status string, isOperational, Error inheritance |
+| `asyncHandler.test.js` | 3     | Verifies req/res/next forwarding and error catching                   |
+| `events.test.js`       | 6     | Auth checks, validation responses, health endpoint                    |
 
 **Total: 14 passing tests across 3 suites**
 
@@ -343,9 +346,9 @@ npx jest tests/integration
 
 ## npm Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start with `NODE_ENV=development` + nodemon auto-reload |
-| `npm start` | Start with `NODE_ENV=production` |
-| `npm test` | Run Jest test suite |
-| `npm run seed` | Seed the database with sample data |
+| Command        | Description                                             |
+| -------------- | ------------------------------------------------------- |
+| `npm run dev`  | Start with `NODE_ENV=development` + nodemon auto-reload |
+| `npm start`    | Start with `NODE_ENV=production`                        |
+| `npm test`     | Run Jest test suite                                     |
+| `npm run seed` | Seed the database with sample data                      |

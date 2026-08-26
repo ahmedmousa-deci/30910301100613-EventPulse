@@ -1,10 +1,21 @@
+const mongoose = require("mongoose");
 const asyncHandler = require("../utils/asyncHandler.util");
 const AppError = require("../utils/appError.util");
 const Event = require("../modules/event.model");
 const Category = require("../modules/category.model");
 
 const getAllEvents = asyncHandler(async (req, res, next) => {
-  const { search, limit, page, city, startDate, endDate, category } = req.query;
+  const {
+    search,
+    limit,
+    page,
+    city,
+    startDate,
+    endDate,
+    category,
+    sortBy,
+    order,
+  } = req.query;
 
   const pageValue = Math.max(parseInt(page) || 1, 1);
   const limitValue = Math.min(parseInt(limit) || 20, 20); // max 20 per page
@@ -24,12 +35,87 @@ const getAllEvents = asyncHandler(async (req, res, next) => {
     ...(category ? { category } : {}),
   };
 
-  const events = await Event.find(query)
-    .skip(skipValue)
-    .limit(limitValue)
-    .populate("category", "name")
-    .lean()
-    .orFail();
+  const allowedSortFields = ["date", "registrations"];
+  const sortField = allowedSortFields.includes(sortBy) ? sortBy : "date";
+  const sortDirection = order === "desc" ? -1 : 1;
+
+  const sort = { [sortField]: sortDirection };
+
+  let events;
+  if (sortField === "registrations") {
+    const matchQuery = {
+      ...(search ? { title: { $regex: new RegExp(search, "i") } } : {}),
+      ...(city ? { city: { $regex: new RegExp(city, "i") } } : {}),
+      ...(startDate || endDate
+        ? {
+            date: {
+              ...(startDate ? { $gte: new Date(startDate) } : {}),
+              ...(endDate ? { $lte: new Date(endDate) } : {}),
+            },
+          }
+        : {}),
+      ...(category && mongoose.Types.ObjectId.isValid(category)
+        ? { category: new mongoose.Types.ObjectId(category) }
+        : category
+          ? { category }
+          : {}),
+    };
+
+    events = await Event.aggregate([
+      { $match: matchQuery },
+      {
+        $lookup: {
+          from: "registrations",
+          localField: "_id",
+          foreignField: "event",
+          as: "registrations",
+        },
+      },
+      {
+        $addFields: {
+          registrationsCount: { $size: "$registrations" },
+        },
+      },
+      {
+        $sort: {
+          registrationsCount: sortDirection,
+          _id: 1,
+        },
+      },
+      { $skip: skipValue },
+      { $limit: limitValue },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          registrations: 0,
+          registrationsCount: 0,
+          "category.createdAt": 0,
+          "category.updatedAt": 0,
+          "category.__v": 0,
+        },
+      },
+    ]);
+  } else {
+    events = await Event.find(query)
+      .sort(sort)
+      .skip(skipValue)
+      .limit(limitValue)
+      .populate("category", "name")
+      .lean();
+  }
 
   const total = await Event.countDocuments(query);
 

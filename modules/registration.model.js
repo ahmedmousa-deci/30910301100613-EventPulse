@@ -34,6 +34,6 @@ const registrationSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-registrationSchema.index({ user: 1, event: 1 }, { unique: true }); // this line prevents the user from registering for the same event multiple times, by creating a unique index on the combination of user and event fields.
+registrationSchema.index({ user: 1, event: 1 }, { unique: true });
 
 module.exports = mongoose.model("Registration", registrationSchema);

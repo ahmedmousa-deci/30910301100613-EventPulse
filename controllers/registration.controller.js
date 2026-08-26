@@ -89,7 +89,6 @@ const deleteRegistration = asyncHandler(async (req, res, next) => {
   });
 
   if ((await Registration.exists({ _id: req.params.id })) === null) {
-    // add this line because isOwner and isAdmin conditions, if the registration will be false and activates 403 forbidden error first not 404 not found.
     return next(new AppError(404, "Registration not found"));
   }
 
