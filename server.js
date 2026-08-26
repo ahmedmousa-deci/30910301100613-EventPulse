@@ -14,6 +14,8 @@ const authRoute = require("./routes/auth.route");
 const categoryRoute = require("./routes/category.route");
 const requireAuth = require("./middleware/requireAuth");
 const Event = require("./modules/event.model");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 const app = express();
 const port = config.PORT;
 
@@ -168,17 +170,27 @@ app.use(
 app.use("/api/v1/messages", requireAuth, require("./routes/message.route"));
 app.use("/api/announcements", require("./routes/announcement.route"));
 
+// ── Swagger UI ─────────────────────────────────────────────────────────────
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.get("/health", (req, res) => {
-  res.status(200).send("Server is healthy");
+  res
+    .status(200)
+    .json({ status: "ok", message: "Server is healthy", env: config.NODE_ENV });
 });
 
 app.use(errorHandler);
-async function startServer() {
-  await connectDB(config.MONGO_URL);
 
-  server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
+// Only start the HTTP server when this file is run directly (not during tests)
+if (require.main === module) {
+  async function startServer() {
+    await connectDB(config.MONGO_URL);
+    server.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  }
+  startServer();
 }
 
-startServer();
+// Export app and io for Supertest integration tests
+module.exports = { app, io };

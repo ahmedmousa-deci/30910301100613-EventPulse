@@ -1,5 +1,4 @@
 const { validationResult } = require("express-validator");
-const AppError = require("../utils/appError.util");
 
 const validator = (req, res, next) => {
   const errors = validationResult(req);
@@ -7,15 +6,15 @@ const validator = (req, res, next) => {
     return next();
   }
 
-  return next(
-    new AppError(
-      400,
-      errors
-        .array()
-        .map((err) => err.msg)
-        .join(", "),
-    ),
-  );
+  // Return 422 with an array of field-specific error objects
+  return res.status(422).json({
+    status: 422,
+    message: "Validation failed",
+    errors: errors.array().map((err) => ({
+      field: err.path || err.param,
+      message: err.msg,
+    })),
+  });
 };
 
 module.exports = validator;
