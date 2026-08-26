@@ -125,18 +125,10 @@ app.use((req, res, next) => {
 });
 app.use(mongoSanitize());
 
+connectDB(config.MONGO_URL);
+
 if (config.NODE_ENV === "production") {
-  const logDirectory = path.join(__dirname, "logs");
-  if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory);
-  }
-
-  const accessLogStream = fs.createWriteStream(
-    path.join(logDirectory, "access.log"),
-    { flags: "a" },
-  );
-
-  app.use(morgan("combined", { stream: accessLogStream }));
+  app.use(morgan("combined"));
 } else {
   app.use(morgan("dev"));
 }
@@ -162,13 +154,12 @@ app.get("/health", (req, res) => {
 app.use(errorHandler);
 
 if (require.main === module) {
-  async function startServer() {
-    await connectDB(config.MONGO_URL);
-    server.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
-    });
-  }
-  startServer();
+  server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
 }
 
-module.exports = { app, io };
+module.exports = app;
+module.exports.app = app;
+module.exports.io = io;
+

@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
 
-/**
- * Connecting to the database, Requires the url to connect
- * @param {string} url
- */
 async function connectDB(url) {
+  if (!url) return;
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
   try {
     await mongoose.connect(url);
-    console.log("connected");
+    console.log("Connected to MongoDB");
   } catch (e) {
-    console.log("connection failed");
-    console.error(e);
-    process.exit(1);
+    console.error("MongoDB connection error:", e);
   }
 }
 
 module.exports = connectDB;
+
