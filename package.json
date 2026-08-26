@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahmedmousa-deci/event_paluse.git"
+    "url": "git+https://github.com/ahmedmousa-deci/event_pluse.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/ahmedmousa-deci/event_paluse/issues"
+    "url": "https://github.com/ahmedmousa-deci/event_pluse/issues"
   },
-  "homepage": "https://github.com/ahmedmousa-deci/event_paluse#readme",
+  "homepage": "https://github.com/ahmedmousa-deci/event_pluse#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cross-env": "^10.1.0",
