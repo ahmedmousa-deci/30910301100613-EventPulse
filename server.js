@@ -161,14 +161,15 @@ app.get("/health", (req, res) => {
 
 app.use(errorHandler);
 
+const dbReady = connectDB(config.MONGO_URL);
+
 if (require.main === module) {
-  async function startServer() {
-    await connectDB(config.MONGO_URL);
+  (async () => {
+    await dbReady;
     server.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
     });
-  }
-  startServer();
+  })();
 }
 
 module.exports = app;
