@@ -143,7 +143,6 @@ if (config.NODE_ENV === "production") {
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/categories", requireAuth, categoryRoute);
-app.use("/api/v1/users", requireAuth, require("./routes/user.route"));
 app.use("/api/v1/events", requireAuth, require("./routes/event.route"));
 app.use(
   "/api/v1/registrations",
