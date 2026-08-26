@@ -14,4 +14,3 @@ async function connectDB(url) {
 }
 
 module.exports = connectDB;
-
