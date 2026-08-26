@@ -18,7 +18,9 @@ const createAnnouncement = asyncHandler(async (req, res, next) => {
   await message.populate("user", "name email");
 
   const io = req.app.get("io");
-  io.to(`event_${eventId}`).emit("announcement", message);
+  if (io) {
+    io.to(`event_${eventId}`).emit("announcement", message);
+  }
 
   res.status(201).json({ success: true, data: message });
 });

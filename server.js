@@ -1,5 +1,6 @@
 const config = require("./config/config");
 const express = require("express");
+const cors = require("cors");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
@@ -112,6 +113,8 @@ io.on("connection", (socket) => {
   });
 });
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -125,7 +128,8 @@ app.use((req, res, next) => {
 });
 app.use(mongoSanitize());
 
-if (config.NODE_ENV === "production") {
+// Logger configuration (Vercel-compatible read-only filesystem check)
+if (config.NODE_ENV === "production" && !process.env.VERCEL) {
   const logDirectory = path.join(__dirname, "logs");
   if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
@@ -137,10 +141,25 @@ if (config.NODE_ENV === "production") {
   );
 
   app.use(morgan("combined", { stream: accessLogStream }));
+} else if (config.NODE_ENV === "production" && process.env.VERCEL) {
+  app.use(morgan("combined"));
 } else {
   app.use(morgan("dev"));
 }
 
+// Ensure database connection before handling requests
+app.use(async (req, res, next) => {
+  try {
+    if (config.MONGO_URL) {
+      await connectDB(config.MONGO_URL);
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+// API Routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/categories", requireAuth, categoryRoute);
 app.use("/api/v1/events", requireAuth, require("./routes/event.route"));
@@ -151,25 +170,58 @@ app.use(
 );
 app.use("/api/v1/messages", requireAuth, require("./routes/message.route"));
 app.use("/api/announcements", require("./routes/announcement.route"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Swagger Documentation with CDN assets for Serverless compatibility
+const SWAGGER_CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui.min.css";
+const SWAGGER_JS_URLS = [
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-bundle.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-standalone-preset.min.js",
+];
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCssUrl: SWAGGER_CSS_URL,
+    customJs: SWAGGER_JS_URLS,
+  }),
+);
+
+// Root & Health Check Endpoints
+app.get("/", (req, res) => {
+  res.status(200).json({
+    name: "EventPulse API",
+    version: "1.0.0",
+    status: "active",
+    docs: "/api-docs",
+    health: "/health",
+  });
+});
 
 app.get("/health", (req, res) => {
-  res
-    .status(200)
-    .json({ status: "ok", message: "Server is healthy", env: config.NODE_ENV });
+  res.status(200).json({
+    status: "ok",
+    message: "Server is healthy",
+    env: config.NODE_ENV,
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  });
 });
 
 app.use(errorHandler);
 
-connectDB(config.MONGO_URL);
+// Initial DB connection attempt
+if (config.MONGO_URL) {
+  connectDB(config.MONGO_URL).catch((err) => {
+    console.error("Initial DB connection failed:", err.message);
+  });
+}
 
 if (require.main === module) {
   server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
 }
-
-module.exports = app;
 
 module.exports = app;
 module.exports.app = app;

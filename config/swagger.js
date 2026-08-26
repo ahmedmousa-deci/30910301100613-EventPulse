@@ -1,4 +1,5 @@
-﻿const swaggerJsdoc = require("swagger-jsdoc");
+const path = require("path");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
   definition: {
@@ -11,8 +12,12 @@ const options = {
     },
     servers: [
       {
+        url: "/",
+        description: "Current host (Vercel / Production / Local)",
+      },
+      {
         url: "http://localhost:3000",
-        description: "Development server",
+        description: "Local development server",
       },
     ],
     components: {
@@ -31,7 +36,11 @@ const options = {
           required: ["name", "email", "password"],
           properties: {
             name: { type: "string", example: "John Doe" },
-            email: { type: "string", format: "email", example: "john@example.com" },
+            email: {
+              type: "string",
+              format: "email",
+              example: "john@example.com",
+            },
             password: { type: "string", minLength: 6, example: "secret123" },
           },
         },
@@ -39,7 +48,11 @@ const options = {
           type: "object",
           required: ["email", "password"],
           properties: {
-            email: { type: "string", format: "email", example: "john@example.com" },
+            email: {
+              type: "string",
+              format: "email",
+              example: "john@example.com",
+            },
             password: { type: "string", example: "secret123" },
           },
         },
@@ -47,7 +60,10 @@ const options = {
           type: "object",
           properties: {
             status: { type: "integer", example: 200 },
-            token: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+            token: {
+              type: "string",
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+            },
             data: { $ref: "#/components/schemas/User" },
           },
         },
@@ -58,7 +74,11 @@ const options = {
             _id: { type: "string", example: "64f3a1b2c5d6e7f8a9b0c1d2" },
             name: { type: "string", example: "John Doe" },
             email: { type: "string", example: "john@example.com" },
-            role: { type: "string", enum: ["admin", "attendee"], example: "attendee" },
+            role: {
+              type: "string",
+              enum: ["admin", "attendee"],
+              example: "attendee",
+            },
           },
         },
         // ── Event schemas ──────────────────────────────────────────────────
@@ -67,7 +87,10 @@ const options = {
           properties: {
             _id: { type: "string", example: "64f3a1b2c5d6e7f8a9b0c1d2" },
             title: { type: "string", example: "Tech Conference 2026" },
-            description: { type: "string", example: "A conference about technology" },
+            description: {
+              type: "string",
+              example: "A conference about technology",
+            },
             date: { type: "string", format: "date", example: "2026-09-15" },
             city: { type: "string", example: "Cairo" },
             capacity: { type: "integer", example: 200 },
@@ -85,7 +108,10 @@ const options = {
           required: ["title", "date", "city", "capacity", "category"],
           properties: {
             title: { type: "string", example: "Tech Conference 2026" },
-            description: { type: "string", example: "A conference about technology" },
+            description: {
+              type: "string",
+              example: "A conference about technology",
+            },
             date: { type: "string", format: "date", example: "2026-09-15" },
             city: { type: "string", example: "Cairo" },
             capacity: { type: "integer", example: 200 },
@@ -122,7 +148,7 @@ const options = {
     },
   },
   // Where swagger-jsdoc should look for @swagger JSDoc comments
-  apis: ["./routes/*.js"],
+  apis: [path.join(__dirname, "../routes/*.js"), "./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

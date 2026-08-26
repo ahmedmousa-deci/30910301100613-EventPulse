@@ -17,6 +17,8 @@ A production-ready RESTful API for event management with real-time announcements
 - [Validation & Error Handling](#validation--error-handling)
 - [API Documentation](#api-documentation)
 - [Testing](#testing)
+- [Deploy to Vercel](#deploy-to-vercel)
+- [npm Scripts](#npm-scripts)
 
 ---
 
@@ -341,6 +343,37 @@ npx jest tests/integration
 | `events.test.js`       | 6     | Auth checks, validation responses, health endpoint                    |
 
 **Total: 14 passing tests across 3 suites**
+
+---
+
+## Deploy to Vercel
+
+The API is fully configured for deployment on [Vercel](https://vercel.com) via Serverless Functions.
+
+### 1. Prerequisites
+
+- A MongoDB Atlas database. Make sure **Network Access** allows `0.0.0.0/0` (anywhere) so Vercel's serverless functions can connect.
+
+### 2. Deploy via Vercel CLI
+
+```bash
+# Install Vercel CLI (if not installed)
+npm i -g vercel
+
+# Deploy to Vercel
+vercel
+```
+
+### 3. Deploy via GitHub / Vercel Dashboard
+
+1. Push your repository to GitHub.
+2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New Project**.
+3. Import your repository.
+4. Under **Environment Variables**, configure the following:
+   - `MONGO_URL`: `mongodb+srv://<user>:<password>@cluster0.mongodb.net/<dbname>`
+   - `JWT_SECRET`: `your_super_secret_jwt_key`
+   - `JWT_EXPIRES_IN`: `7d`
+5. Click **Deploy**.
 
 ---
 
